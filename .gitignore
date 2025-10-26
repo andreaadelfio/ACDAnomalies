@@ -1,0 +1,34 @@
+# Folders
+/data
+/results
+/logs
+/lectures
+/m_check
+/modules/lime
+/__pycache__
+/*/__pycache__
+/*/*/__pycache__
+/utils/*
+/best
+/catalogs
+/applications/intesa sanpaolo
+/applications/acd/data
+/applications/acd/best/
+/applications/acd/catalogs/
+/applications/acd/logs
+/applications/acd/results
+
+# Extensions
+*.pyc
+*.log
+*.csv
+*.txt
+
+# Files
+sc_meta.txt
+sc_columns.txt
+ACD_tiles_size2.txt
+list_file.txt
+ls.txt
+errors.txt
+failed_runs.txt
