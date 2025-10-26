@@ -336,7 +336,7 @@ def plot_with_model(inputs_outputs, model_path, y_cols, x_cols):
 ########### Main ############
 if __name__ == '__main__':
     x_cols = [col for col in x_cols if col not in x_cols_excluded]
-    inputs_outputs_df = File().read_dfs_from_weekly_pk_folder('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd/data/LAT_ACD/processed/new_with_correct_triggs/inputs_outputs_runs/pk',
+    inputs_outputs_df = File().read_dfs_from_weekly_pk_folder('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd/data/LAT_ACD/processed/new_with_correct_triggs/inputs_outputs_runs',
          start=0, stop=818, cols_list=x_cols + y_cols + y_smooth_cols + ['datetime', 'MET'], y_cols=y_cols, resample_skip=3)
     # only take values different from 0
     # Plotter(df=inputs_outputs_df).plot_correlation_matrix(show=False, save=True)
