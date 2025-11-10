@@ -10,9 +10,9 @@ Modified date: 10/12/2024
 TODO:
 '''
 import os
-from tslies.config import set_dir
+from tslies.config import set_base_dir
 
-set_dir('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd')
+set_base_dir('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd')
 import pandas as pd
 import numpy as np
 
@@ -53,7 +53,7 @@ def run_rnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_cols
         if history.history['loss'][-1] > 0.0041:
             continue
         rnn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         for start, end in [(35000, 43000), (50000, 62000) , (507332, 568639)]:
             rnn.predict(start=start, end=end, write_bkg=False, save_predictions_plot=True, support_variables=['SOLAR_a'])
         # if history.history['loss'][-1] < 0.0042:
@@ -79,7 +79,7 @@ def run_ffnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_col
         nn.create_model()
         history = nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),
@@ -116,7 +116,7 @@ def run_spectralffnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_col
         nn.create_model()
         nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),
@@ -152,7 +152,7 @@ def run_pbnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_col
         nn.create_model()
         history = nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),
@@ -167,10 +167,10 @@ def run_pbnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_col
 
 def run_bnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_cols):
     '''Runs the neural network model'''
-    nn = BNNPredictor(inputs_outputs, y_cols, x_cols, y_cols_raw, cols_pred, y_smooth_cols, latex_y_cols, units, False)
+    nn = BNNPredictor(inputs_outputs, y_cols, x_cols, cols_pred, latex_y_cols, units, False)
     hyperparams_combinations = {
         'units_for_layers' : ([90], [90], [90], [70], [50]),
-        'epochs' : [70],
+        'epochs' : [10],
         'bs' : [1000],
         'do' : [0.02],
         'norm' : [0],
@@ -186,7 +186,7 @@ def run_bnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_cols
         nn.create_model()
         nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),
@@ -222,7 +222,7 @@ def run_abnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_col
         nn.create_model()
         history = nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),
@@ -258,7 +258,7 @@ def run_mcmcbnn(inputs_outputs, y_cols, y_cols_raw, cols_pred, y_smooth_cols, x_
         nn.create_model()
         history = nn.train()
         nn.update_summary()
-        Plotter.save(BACKGROUND_PREDICTION_FOLDER_NAME, params)
+        Plotter.save(params)
         # for start, end in [('2024-03-10 12:08:00', '2024-03-10 12:30:00'),
         #                    ('2024-03-28 20:50:00', '2024-03-28 21:10:00'),
         #                    ('2024-05-08 20:30:00', '2024-05-08 23:40:00'),

@@ -11,12 +11,11 @@
 /utils/*
 /best
 /catalogs
-/applications/intesa sanpaolo/*.png
-/applications/acd/data
-/applications/acd/best/
-/applications/acd/catalogs/
-/applications/acd/logs
-/applications/acd/results
+/acd/data
+/acd/best/
+/acd/catalogs/
+/acd/logs
+/acd/results
 
 # Extensions
 *.pyc

@@ -15,7 +15,7 @@ from astropy.time import Time, TimeDelta
 from astropy.table import vstack
 
 from tslies.utils import Logger, logger_decorator
-from modules.config import DIR
+# from modules.config import DIR
 
 class CatalogsUtils:
     def __init__(self):
@@ -121,7 +121,7 @@ class CatalogsReader:
 
     @logger_decorator(logger)
     def read_fits_file(self):
-        fits_file_path = os.path.join(DIR, 'catalogs', 'total_catalog.fits')
+        fits_file_path = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'total_catalog.fits')
         file_paths = glob.glob(fits_file_path)
         df = pd.DataFrame()
         for file_path in file_paths:
@@ -137,28 +137,28 @@ class CatalogsReader:
 
 if __name__ == "__main__":
     cu = CatalogsUtils()
-    SVOM_FITS_FILE_PATH = os.path.join(DIR, 'catalogs', 'SVOM.fits')
+    SVOM_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'SVOM.fits')
     fits_table = cu.read_fits_file(SVOM_FITS_FILE_PATH)
     final_table = cu.extract_from_svom_fits(fits_table)
 
-    EP_FITS_FILE_PATH = os.path.join(DIR, 'catalogs', 'EP.fits')
+    EP_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'EP.fits')
     fits_table = cu.read_fits_file(EP_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_ep_fits(fits_table)])
 
-    FermiGBMTrig_FITS_FILE_PATH = os.path.join(DIR, 'catalogs', 'FermiGBMTrig.fits')
+    FermiGBMTrig_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'FermiGBMTrig.fits')
     fits_table = cu.read_fits_file(FermiGBMTrig_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_fermigbm_fits(fits_table)])
 
-    SWIFT_FITS_FILE_PATH = os.path.join(DIR, 'catalogs', 'SWIFT.txt')
+    SWIFT_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'SWIFT.txt')
     txt_table = Table.read(SWIFT_FITS_FILE_PATH, format='ascii')
     final_table = vstack([final_table, cu.extract_from_swift_fits(txt_table)])
 
-    FermiGBMBurst_FITS_FILE_PATH = os.path.join(DIR, 'catalogs', 'FermiGBMBurstCat.fits')
+    FermiGBMBurst_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'FermiGBMBurstCat.fits')
     fits_table = cu.read_fits_file(FermiGBMBurst_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_fermigbmburst_fits(fits_table)])
 
     final_table.sort('TRIGGER_TIME')
-    final_cat_FILE_PATH = os.path.join(DIR, 'catalogs', 'total_catalog.fits')
+    final_cat_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'total_catalog.fits')
     cu.create_fits_from_table(final_cat_FILE_PATH, final_table)
 
     cr = CatalogsReader()
