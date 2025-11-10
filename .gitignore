@@ -21,12 +21,8 @@
 *.pyc
 *.log
 *.csv
-*.txt
 
 # Files
-sc_meta.txt
-sc_columns.txt
-ACD_tiles_size2.txt
 list_file.txt
 ls.txt
 errors.txt

@@ -1,0 +1,37 @@
+START (s)               -> Mission Elapsed Time of start of interval
+STOP (s)                -> Mission Elapsed Time of end of interval
+SC_POSITION (m)         -> Three element array giving the position (x, y, z) of spacecraft in inertial (ECI) coordinates at START
+LAT_GEO (deg)           -> ground point latitude
+LON_GEO (deg)           -> ground point longitude
+RAD_GEO (m)             -> S/C altitude
+RA_ZENITH (deg)         -> RA of zenith direction at START
+DEC_ZENITH (deg)        -> Dec of zenith direction at START
+B_MCILWAIN (Gauss)      -> McIlwain B parameter, magnitude of the magnetic field at START
+L_MCILWAIN (Earth_Radii)-> McIlwain L parameter, distance/shell value at START 'https://www.spenvis.oma.be/help/background/magfield/bl.html'
+GEOMAG_LAT (deg)        -> invariant geomagnetic latitude
+LAMBDA (deg)            -> effective geomagnetic latitude (signed to indic
+IN_SAA                  -> whether spacecraft was in SAA
+RA_SCZ (deg)            -> viewing direction at START (RA of S/C +z axis)
+DEC_SCZ (deg)           -> viewing direction at START (Dec of S/C +z axis)
+RA_SCX (deg)            -> viewing direction at START (RA of S/C +x axis)
+DEC_SCX (deg)           -> viewing direction at START (Dec of S/C +x axis)
+RA_NPOLE (deg)          -> RA of north orbital pole at START
+DEC_NPOLE (deg)         -> Dec of north orbital pole at START
+ROCK_ANGLE (deg)        -> Angle of the spacecraft Z-axis from zenith (positive values indicate a rock toward the north)
+LAT_MODE                -> Spacecraft GNC mode, where the 3 nominal modes are 3(inertial point), 4 (Maneuver) and 5 (zenithpoint/survey). Other modes include 1 and 2 (capture and sunpoint - rarely used) and 6 and 7 (reentry modes).
+LAT_CONFIG              -> Flag for the configuration of the LAT (1 = nominal science configuration, 0 = not recommended for analysis)
+DATA_QUAL               -> Signed integer value indicating the quality of the LAT data, with the following meanings: 
+                                0 = Bad data. Do not use.
+                                1 = Good data. Use for normal science.
+                                2 = GPS 13 microsecond timing anomaly. Can be used in standard analysis. May affect pulsar timing analysis.
+                                -1 = Solar Flare. The standard IRFs do not properly describe the data.
+                                -2 = Particle event. The standard IRFs do not properly describe the data.
+                                -3 = GRB 221009A. The standard IRFs do not properly describe the data. See the caveats about the data for this source.
+LIVETIME (s)            -> Accumulated livetime of the LAT during the interval from START to STOP
+QSJ_1                   -> First component of SC attitude quaternion
+QSJ_2                   -> Second component of SC attitude quaternion
+QSJ_3                   -> Third component of SC attitude quaternion
+QSJ_4                   -> Fourth component of SC attitude quaternion
+RA_SUN (deg)            -> RA of Sun
+DEC_SUN (deg)           -> DEC of Sun
+SC_VELOCITY (m/s)       -> Three element array giving the spacecraft velocity in the same coordinate frame as SC_POSITION at START
