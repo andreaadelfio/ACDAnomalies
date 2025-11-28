@@ -13,7 +13,6 @@ TODO:
 import os
 from tslies.config import set_base_dir
 
-set_base_dir('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd')
 import numpy as np
 import gc
 gc.enable()
@@ -164,10 +163,10 @@ def run_trigger_mean(inputs_outputs_df, y_cols, y_cols_raw, y_cols_pred, x_cols,
     trigger.run(reset_condition=reset)
     merged_anomalies, return_df = trigger.identify_and_merge_triggers(merge_interval=60)
     detections_df = trigger.get_detections_df(['MET'])
-    trigger.save_detections_csv(detections_df=detections_df)
+    trigger.save_detections_csv(detections_df=detections_df, file=file)
 
     detections_df, filtered_anomalies = trigger.filter_from_catalog(catalog, merged_anomalies, detections_df)
-    trigger.save_detections_csv(detections_df=detections_df, suffix='_in_catalog')
+    trigger.save_detections_csv(detections_df=detections_df, file=file, suffix='_in_catalog')
     for x, v in filtered_anomalies.items():
         merged_anomalies[x] = v
     trigger.plot_anomalies(filtered_anomalies, return_df, support_vars=['GOES_XRSA_HARD_EARTH_OCCULTED'])
@@ -175,11 +174,12 @@ def run_trigger_mean(inputs_outputs_df, y_cols, y_cols_raw, y_cols_pred, x_cols,
 if __name__ == '__main__':
     # Read the catalog
     catalog = CatalogsReader().catalog_df
+    catalog = catalog[catalog['CAT_NAME'] == 'GRACEDB']
     print(catalog)
     x_cols = [col for col in x_cols if col not in x_cols_excluded]
     merge = 1
     for i in range(0, 1000, merge):
-        inputs_outputs_df = File().read_dfs_from_weekly_pk_folder('/home/andrea-adelfio/OneDrive/Workspace INFN/ACDAnomalies/applications/acd/data/LAT_ACD/processed/new_with_correct_triggs/inputs_outputs_runs', start=i, stop=i+merge-1)
+        inputs_outputs_df = File().read_dfs_from_weekly_pk_folder('/data/acd/data/LAT_ACD/processed/new_with_correct_triggs/inputs_outputs_runs', start=i, stop=i+merge-1)
         # inputs_outputs_df = Data.get_masked_dataframe(data=inputs_outputs_df,
         #                                            start='2024-06-09 11:30:32',
         #                                            stop='2024-06-09 12:10:32',

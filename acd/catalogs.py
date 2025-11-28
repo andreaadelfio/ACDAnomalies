@@ -15,7 +15,14 @@ from astropy.time import Time, TimeDelta
 from astropy.table import vstack
 
 from tslies.utils import Logger, logger_decorator
-# from modules.config import DIR
+from tslies.config import get_base_dir
+base_dir = get_base_dir()
+
+class GraceDBUtils:
+    def __init__(self):
+        pass
+
+    
 
 class CatalogsUtils:
     def __init__(self):
@@ -100,6 +107,19 @@ class CatalogsUtils:
         txt_table.remove_columns(['GRBname', 'Trig_ID', 'Trig_time_met', 'Trig_time_UTC', 'RA_ground', 'DEC_ground', 'Image_position_err', 'Image_SNR', 'T90', 'T90_err', 'T50', 'T50_err', 'Evt_start_sincetrig', 'Evt_stop_sincetrig', 'pcode', 'Trigger_method', 'XRT_detection', 'comment'])
         return txt_table
 
+    def extract_from_gracedb_fits(self, fits_table) -> Table:
+        """
+        Extracts the relevant columns from the fits table and renames them according to the provided mapping.
+        """
+        fits_table['NAME'] = [value.strip() for value in fits_table['superevent_id']]
+        fits_table['TRIGGER_TYPE'] = ['GW'] * len(fits_table)
+        fits_table['TIME'] = Time(fits_table['t_start'], format='iso', scale='utc').iso
+        fits_table['TRIGGER_TIME'] = Time(fits_table['t_0'], format='iso', scale='utc').iso
+        fits_table['END_TIME'] = Time(fits_table['t_end'], format='iso', scale='utc').iso
+        fits_table['CAT_NAME'] = ['GRACEDB'] * len(fits_table)
+        fits_table.remove_columns(['superevent_id', 't_start', 't_0', 't_end', 'far'])
+        return fits_table
+
     def create_fits_from_table(self, filename, table):
         """
         Create a FITS file from a Table.
@@ -121,7 +141,7 @@ class CatalogsReader:
 
     @logger_decorator(logger)
     def read_fits_file(self):
-        fits_file_path = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'total_catalog.fits')
+        fits_file_path = os.path.join(base_dir, 'catalogs', 'total_catalog.fits')
         file_paths = glob.glob(fits_file_path)
         df = pd.DataFrame()
         for file_path in file_paths:
@@ -137,28 +157,32 @@ class CatalogsReader:
 
 if __name__ == "__main__":
     cu = CatalogsUtils()
-    SVOM_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'SVOM.fits')
+    SVOM_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'SVOM.fits')
     fits_table = cu.read_fits_file(SVOM_FITS_FILE_PATH)
     final_table = cu.extract_from_svom_fits(fits_table)
 
-    EP_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'EP.fits')
+    EP_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'EP.fits')
     fits_table = cu.read_fits_file(EP_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_ep_fits(fits_table)])
 
-    FermiGBMTrig_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'FermiGBMTrig.fits')
+    FermiGBMTrig_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'FermiGBMTrig.fits')
     fits_table = cu.read_fits_file(FermiGBMTrig_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_fermigbm_fits(fits_table)])
 
-    SWIFT_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'SWIFT.txt')
+    SWIFT_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'SWIFT.txt')
     txt_table = Table.read(SWIFT_FITS_FILE_PATH, format='ascii')
     final_table = vstack([final_table, cu.extract_from_swift_fits(txt_table)])
 
-    FermiGBMBurst_FITS_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'FermiGBMBurstCat.fits')
+    FermiGBMBurst_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'FermiGBMBurstCat.fits')
     fits_table = cu.read_fits_file(FermiGBMBurst_FITS_FILE_PATH)
     final_table = vstack([final_table, cu.extract_from_fermigbmburst_fits(fits_table)])
 
+    GRACEDB_FITS_FILE_PATH = os.path.join(base_dir, 'catalogs', 'gracedb_events_2024.fits')
+    fits_table = cu.read_fits_file(GRACEDB_FITS_FILE_PATH)
+    final_table = vstack([final_table, cu.extract_from_gracedb_fits(fits_table)])
+
     final_table.sort('TRIGGER_TIME')
-    final_cat_FILE_PATH = os.path.join(os.environ['TSLIES_DIR'], 'catalogs', 'total_catalog.fits')
+    final_cat_FILE_PATH = os.path.join(base_dir, 'catalogs', 'total_catalog.fits')
     cu.create_fits_from_table(final_cat_FILE_PATH, final_table)
 
     cr = CatalogsReader()
@@ -174,3 +198,5 @@ if __name__ == "__main__":
     print(final_table[final_table['CAT_NAME'] == 'SWIFT'][:3])
     print("\nFERMI GBM Burst Catalog:")
     print(final_table[final_table['CAT_NAME'] == 'FERMIGBMBURST'][:3])
+    print("\nGRACEDB Catalog:")
+    print(final_table[final_table['CAT_NAME'] == 'GRACEDB'][:3])
